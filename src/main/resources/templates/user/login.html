@@ -7,14 +7,52 @@
 		<section layout:fragment="contents" class="contents d-flex justify-content-center">
 			<div class="input-box my-5 p-5 rounded-lg">
 				<h1 class="text-center p-3">로그인</h1>
-				<input type="text" class="form-control mt-2" placeholder="아이디">
-				<input type="password" class="form-control mt-2" placeholder="비밀번호">
+				<input id="id" type="text" class="form-control mt-2" placeholder="아이디">
+				<input id="password" type="password" class="form-control mt-2" placeholder="비밀번호">
 				
-				<button type="button" class="btn btn-secondary btn-block mt-3">가입</button>
+				<button id="loginBtn" type="button" class="btn btn-secondary btn-block mt-3">가입</button>
 				<div class="mt-4 text-center">
 					<a href="/user/join-view">회원가입</a>
 				</div>
 			</div>
 		</section>
 		
+<script layout:fragment="script">
+	$(document).ready(function(){
+		$("#loginBtn").on("click", function(){
+			let id = $("#id").val();
+			let password = $("#password").val();
+			
+			if(id.length == 0){
+				alert("아이디를 입력해주세요");
+				return false;
+			}
+			
+			if(password.length == 0){
+				alert("비밀번호를 입력해주세요");
+				return false;
+			}
+			
+			$.ajax({
+				type:"post"
+				,url:"/user/login"
+				,data:{
+					"loginId" : id
+					, "password" : password
+				}
+				,success(response){
+					if(response.result == "success"){
+						alert("로그인이 되었습니다");
+						location.href="/post/list-view";
+					}else{
+						alert("아이디와 비밀번호를 확인해주세요");
+					}
+				}
+				,error(){
+					alert("로그인에 실패했습니다");
+				}
+			});
+		});
+	});
+</script>
 </html>

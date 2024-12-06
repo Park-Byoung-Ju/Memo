@@ -21,6 +21,23 @@ header{
 	background-color:#cccccc;
 }
 
+.contents > .contents-box{
+	width:600px;
+}
+
+.bg-gray{
+	background-color:rgb(192, 192, 192);
+}
+
+.image-box{
+	width:200px;
+	height:200px;
+}
+
+.w-500{
+	width:500px;
+}
+
 footer{
 	height:70px;
 	background-color:#cccccc;

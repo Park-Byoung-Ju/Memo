@@ -4,8 +4,34 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     layout:decorate="~{layout/default.html}">
     	
-    	<section layout:fragment="contents">
-    		<h1>메모 리스트</h1>
+    	<section layout:fragment="contents" class="d-flex justify-content-center my-2 p-5">
+	    	<div class="w-500 text-center">
+	    		<h1>메모 리스트</h1>
+	    		<table class="table text-center mt-5">
+	    			<thead>
+	    				<tr class="bg-gray">
+	    					<th>No</th>
+	    					<th>제목</th>
+	    					<th>작성 날짜</th>
+	    				</tr>
+	    			</thead>
+	    			
+	    			<tbody>
+	    				<th:block th:if="${result}">
+		    				<tr th:each="post : ${postList}" th:onclick="location.href='/post/detail-view?id=' + [[${post.id}]]">
+		    					<td th:text="${post.id}">No</td>
+		    					<!-- th:herf="|주소?id=${}|" -->
+		    					<td><a th:href="@{|/post/detail-view?id=${post.id}|}" th:text="${post.title}">제목</a></td>
+		    					<td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}">작성 날짜</td>   					
+		    				</tr>
+	    				</th:block>
+	    			</tbody>
+	    		</table>
+	    		
+	    		<div class="mt-3 d-flex justify-content-end">
+		    		<a href="/post/create-view" class="btn bg-gray">메모 쓰기</a>
+	    		</div>
+	    	</div>
     	</section>
     	
 </html>

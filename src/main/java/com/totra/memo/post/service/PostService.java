@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.totra.memo.common.FileManager;
 import com.totra.memo.post.domain.Post;
 import com.totra.memo.post.repository.PostRepository;
 
@@ -17,11 +19,15 @@ public class PostService {
 		this.postRepository = postRepository;
 	}
 	
-	public boolean addPost(int userId,String title, String contents){
+	public boolean addPost(int userId,String title, String contents, MultipartFile file){
+		
+		String imagePath = FileManager.saveFile(userId, file);
+		
 		Post post = Post.builder()
 						.userId(userId)
 						.title(title)
 						.contents(contents)
+						.imagePath(imagePath)
 						.build();
 					
 		try {		
@@ -45,5 +51,45 @@ public class PostService {
 		Post post = resultPost.orElse(null);
 		
 		return post;
+	}
+	
+	public boolean updatePost(int id, String title, String contents) {
+		
+		Optional<Post> optionalPost = postRepository.findById(id);
+
+		if(optionalPost.isPresent()) {
+			
+			Post post = optionalPost.get();
+			
+			post = post.toBuilder().title(title).contents(contents).build();
+			
+			try {
+				postRepository.save(post);
+				return true;
+			}catch(Exception e){
+				return false;
+			}
+			
+		}else {
+			return false;
+		}
+	}
+	
+	public boolean deletePost(int id) {
+		Optional<Post> optionalPost = postRepository.findById(id);
+		
+		if(optionalPost.isPresent()) {
+			
+			Post post = optionalPost.get();
+			
+			FileManager.removeFile(post.getImagePath());
+			
+			postRepository.delete(post);
+			
+			
+			return true;
+		}else {
+			return false;
+		}
 	}
 }
